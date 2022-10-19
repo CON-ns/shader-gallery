@@ -145,7 +145,9 @@ const main = () =>{
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  window.location.reload();
+  main();
+  renderer.render(scene, camera);
+  // window.location.reload();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
