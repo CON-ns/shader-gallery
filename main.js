@@ -53,8 +53,11 @@ function init() {
   renderer.setClearColor(new THREE.Color(0xEEEEEE));//背景色
   renderer.setPixelRatio(window.devicePixelRatio); //アスペクト比を指定
 
-  //リサイズ対応
-  window.addEventListener("resize", onWindowResize);
+  // リサイズ（負荷軽減のためリサイズが完了してから発火する）
+  window.addEventListener('resize', () => {
+    if (timeoutId) clearTimeout(timeoutId);
+    timeoutId = setTimeout(onWindowResize, 200);
+  });
 }
 
 //画像をテクスチャにしたPlaneを扱うクラス
@@ -143,12 +146,21 @@ const main = () =>{
 
 //リサイズ対応関数
 function onWindowResize() {
+  sizes = {
+    width: innerWidth,
+    height: innerHeight,
+  };
+  // カメラの距離を計算し直す
+  const fov = 60;
+  const fovRad = (fov / 2) * (Math.PI / 180);
+  const dist = sizes.width / 2 / Math.tan(fovRad);
+  camera.position.z = dist;
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
   main();
   renderer.render(scene, camera);
-  // window.location.reload();
-  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 init();
