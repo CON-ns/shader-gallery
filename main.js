@@ -33,6 +33,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio); //アスペクト比を指定
 
   // リサイズ（負荷軽減のためリサイズが完了してから発火する）
+  let timeoutId = 0;
   window.addEventListener('resize', () => {
     if (timeoutId) clearTimeout(timeoutId);
     timeoutId = setTimeout(onWindowResize, 200);
